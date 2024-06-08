@@ -21,7 +21,7 @@ module "aws-lambda-exam-module" {
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = module.aws-lambda-exam-module.lambda-exam.function_name
+  function_name = "lambda-exam-${var.env}"
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${module.aws-api-gateway-module.execution_arn}/*/*/*"
