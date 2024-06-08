@@ -41,6 +41,13 @@ jobs:
                 role-session-name: GitHub_to_AWS_via_FederatedOIDC
                 aws-region: ${{ inputs.aws-region }}
 
+            - name: zip lambda function
+              run: |
+                  cd lambda
+                  zip -r lambda.zip .
+                  mv lambda.zip ../infra/envs/${{ inputs.environment }}/lambda.zip
+                  cd ..
+
             - name: Read destroy configuration
               id: read-destroy-config
               run: |
