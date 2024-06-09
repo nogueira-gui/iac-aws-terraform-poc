@@ -113,16 +113,15 @@ resource "aws_lambda_permission" "apigw_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = "lambda-exam-${var.env}"
   principal     = "apigateway.amazonaws.com"
-
-  source_arn = "${module.aws-api-gateway-module.execution_arn}/*/*/*"
+  source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
 
 //Integrate with /exam/{id} endpoint  resource exam_id
 resource "aws_api_gateway_integration" "lambda-gateway-integration" {
-  rest_api_id             = module.aws-api-gateway-module.api_id
-  resource_id             = module.aws-api-gateway-module.exam_id
-  http_method             = module.aws-api-gateway-module.http_method
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.exam_id.id
+  http_method = aws_api_gateway_method.get_exam.http_method
   integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = module.aws-lambda-exam-module.invoke_arn
+  type = "AWS_PROXY"
+  uri = aws_lambda_function.lambda-exam.invoke_arn
 }
