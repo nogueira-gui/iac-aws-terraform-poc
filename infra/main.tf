@@ -110,6 +110,8 @@ resource "aws_lambda_permission" "apigw_lambda" {
   function_name = "lambda-exam-${var.env}"
   principal     = "apigateway.amazonaws.com"
   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+
+  depends_on = [ aws_lambda_function.lambda-exam ]
 }
 
 //Integrate with /exam/{id} endpoint  resource exam_id
