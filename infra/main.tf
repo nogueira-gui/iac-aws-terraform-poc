@@ -116,14 +116,14 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 //Integrate with /exam/{id} endpoint  resource exam_id
 resource "aws_api_gateway_integration" "lambda-gateway-integration" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.exam_id.id
-  http_method = aws_api_gateway_method.get_exam.http_method
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.exam_id.id
+  http_method             = aws_api_gateway_method.get_exam.http_method
   integration_http_method = "POST"
-  type = "AWS_PROXY"
-  uri = aws_lambda_function.lambda-exam.invoke_arn
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda-exam.invoke_arn
 
-  depends_on = [ aws_lambda_function.lambda-exam ]
+  depends_on = [aws_lambda_function.lambda-exam]
 }
 
 resource "aws_api_gateway_deployment" "api_deployment" {
