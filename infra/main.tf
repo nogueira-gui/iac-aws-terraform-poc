@@ -126,16 +126,11 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration" {
   depends_on = [aws_lambda_function.lambda-exam]
 }
 
-resource "aws_api_gateway_deployment" "api_deployment" {
+resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
-    aws_api_gateway_integration.lambda-gateway-integration,    
-    aws_api_gateway_method.get_exam, 
+    aws_api_gateway_integration.lambda-gateway-integration
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = "v1"
-
-  triggers = {
-    redeployment = sha256(jsonencode(aws_api_gateway_integration.lambda-gateway-integration))
-  }
+  stage_name  = "dev"
 }
