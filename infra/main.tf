@@ -128,7 +128,7 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration" {
 
 resource "aws_api_gateway_deployment" "api_deployment" {
   depends_on = [
-    aws_api_gateway_integration.exam_id_get_lambda,
+    aws_api_gateway_integration.lambda-gateway-integration,
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
