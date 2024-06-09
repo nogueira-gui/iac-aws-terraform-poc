@@ -61,11 +61,6 @@ resource "aws_lambda_function" "lambda-exam" {
   }
 }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.attachment
-  ]
-}
-
 resource "aws_iam_role" "role" {
   name = "lambda-exam-role-${var.env}"
   assume_role_policy = jsonencode({
