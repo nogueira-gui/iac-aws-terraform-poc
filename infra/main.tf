@@ -122,4 +122,15 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration" {
   integration_http_method = "POST"
   type = "AWS_PROXY"
   uri = aws_lambda_function.lambda-exam.invoke_arn
+
+  depends_on = [ aws_lambda_function.lambda-exam ]
+}
+
+resource "aws_api_gateway_deployment" "api_deployment" {
+  depends_on = [
+    aws_api_gateway_integration.exam_id_get_lambda,
+  ]
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = "v1"
 }
