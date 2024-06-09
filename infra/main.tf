@@ -28,23 +28,6 @@ resource "aws_api_gateway_method" "get_exam" {
   authorization = "NONE"
 }
 
-resource aws_api_gateway_method_response "get_exam_response" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.exam_id.id
-  http_method = aws_api_gateway_method.get_exam.http_method
-  status_code = "200"
-}
-
-resource aws_api_gateway_integration_response "get_exam_integration_response" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.exam_id.id
-  http_method = aws_api_gateway_method.get_exam.http_method
-  status_code = aws_api_gateway_method_response.get_exam_response.status_code
-  response_templates = {
-    "application/json" = ""
-  }
-}
-
 #LAMBDA FUNCTION
 
 resource "aws_lambda_function" "lambda-exam" {
