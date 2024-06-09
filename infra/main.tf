@@ -106,7 +106,7 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration" {
   resource_id             = aws_api_gateway_resource.exam_id.id
   http_method             = aws_api_gateway_method.get_exam.http_method
   integration_http_method = "POST"
-  type                    = "AWS"
+  type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda-exam.invoke_arn
 
   depends_on = [aws_lambda_function.lambda-exam]
