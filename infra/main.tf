@@ -21,24 +21,10 @@ resource "aws_api_gateway_resource" "exam_id" {
   path_part   = "{id}"
 }
 
-resource "aws_api_gateway_method" "get_exams" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.exams.id
-  http_method   = "GET"
-  authorization = "NONE"
-}
-
 resource "aws_api_gateway_method" "get_exam" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.exam_id.id
   http_method   = "GET"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_method" "post_exam" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.exams.id
-  http_method   = "POST"
   authorization = "NONE"
 }
 
