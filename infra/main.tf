@@ -49,8 +49,8 @@ resource "aws_lambda_function" "lambda-exam" {
   handler          = "lambda_function.handler"
   runtime          = var.runtime
   role             = aws_iam_role.role.arn
-  filename         = "infra/envs/${var.env}/lambda.zip"
-  source_code_hash = filebase64sha256("infra/envs/${var.env}/lambda.zip")
+  filename         = "${path.module}/envs/${var.env}/lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/envs/${var.env}/lambda.zip")
   timeout          = var.timeout
   memory_size      = var.memory_size
 
@@ -59,6 +59,7 @@ resource "aws_lambda_function" "lambda-exam" {
       BUCKET_NAME = var.bucket_name
     }
   }
+}
 
   depends_on = [
     aws_iam_role_policy_attachment.attachment
