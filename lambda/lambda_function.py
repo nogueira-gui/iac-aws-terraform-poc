@@ -2,7 +2,7 @@ import json
 import boto3
 import os
 
-def lambda_handler(event, context):
+def handler(event, context):
     # Verificar se o evento contém dados do corpo da requisição
     s3_bucket = os.environ['BUCKET_NAME']
     s3_file_key = event['pathParameters']['id']
