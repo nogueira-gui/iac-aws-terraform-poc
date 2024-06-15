@@ -80,7 +80,8 @@ resource "aws_iam_policy" "policy" {
         Effect = "Allow",
         Action = [
           "s3:GetObject",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:ListBucket"
         ],
         Resource = [
           "arn:aws:s3:::${var.bucket_name}/*"
