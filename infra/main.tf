@@ -84,6 +84,7 @@ resource "aws_iam_policy" "policy" {
           "s3:ListBucket"
         ],
         Resource = [
+          "arn:aws:s3:::${var.bucket_name}",
           "arn:aws:s3:::${var.bucket_name}/*"
         ]
       }
