@@ -173,4 +173,29 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = var.env
   description = "Deployment for ${var.env} at ${timestamp()}"
+  triggers = {
+    # NOTE: The configuration below will satisfy ordering considerations,
+    #       but not pick up all future REST API changes. More advanced patterns
+    #       are possible, such as using the filesha1() function against the
+    #       Terraform configuration file(s) or removing the .id references to
+    #       calculate a hash against whole resources. Be aware that using whole
+    #       resources will show a difference after the initial implementation.
+    #       It will stabilize to only change when resources change afterwards.
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.exams.id,
+      aws_api_gateway_method.get_exams.id,
+      aws_api_gateway_integration.lambda-gateway-integration-exams.id,
+      aws_api_gateway_method.post_exam.id,
+      aws_api_gateway_integration.lambda-gateway-integration-post-exam.id,
+      aws_api_gateway_resource.exam_id.id,
+      aws_api_gateway_method.get_exam.id,
+      aws_api_gateway_integration.lambda-gateway-integration-exam_id.id,
+      aws_api_gateway_method.delete_exam.id,
+      aws_api_gateway_integration.lambda-gateway-integration-delete-exam.id,
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
