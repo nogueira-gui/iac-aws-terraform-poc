@@ -161,3 +161,13 @@ resource "aws_api_gateway_deployment" "deployment" {
   stage_name  = var.env
   description = "Deployment for ${var.env} at ${timestamp()}"
 }
+
+resource "aws_api_gateway_stage" "stage" {
+  stage_name    = var.env
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  deployment_id = aws_api_gateway_deployment.deployment.id
+
+  variables = {
+    "lambdaAlias" = "LIVE"
+  }
+}
