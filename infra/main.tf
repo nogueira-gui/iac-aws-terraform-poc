@@ -42,6 +42,13 @@ resource "aws_api_gateway_method" "post_exam" {
   authorization = "NONE"
 }
 
+resource "aws_api_gateway_method" "delete_exam" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.exam_id.id
+  http_method   = "DELETE"
+  authorization = "NONE"
+}
+
 #LAMBDA FUNCTION
 
 resource "aws_lambda_function" "lambda-exam" {
@@ -88,7 +95,8 @@ resource "aws_iam_policy" "policy" {
         Action = [
           "s3:GetObject",
           "s3:PutObject",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:DeleteObject"
         ],
         Resource = [
           "arn:aws:s3:::${var.bucket_name}",
@@ -143,6 +151,17 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration-post-exam" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
   resource_id             = aws_api_gateway_resource.exams.id
   http_method             = aws_api_gateway_method.post_exam.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda-exam.invoke_arn
+
+  depends_on = [aws_lambda_function.lambda-exam]
+}
+
+resource "aws_api_gateway_integration" "lambda-gateway-integration-delete-exam" {
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.exam_id.id
+  http_method             = aws_api_gateway_method.delete_exam.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda-exam.invoke_arn

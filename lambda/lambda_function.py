@@ -37,6 +37,20 @@ def handler(event, context):
             }
 
         s3_file_key = event['pathParameters'].get('id')
+
+        if event['httpMethod'] == 'DELETE':
+            if not s3_file_key:
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({'error': 'Missing file key'})
+                }
+
+            aws_s3.delete_json_file(s3_file_key)
+            return {
+                'statusCode': 204,
+                'body': json.dumps({'message': 'File deleted successfully'})
+            }
+
         if not s3_file_key:
             return {
                 'statusCode': 400,
