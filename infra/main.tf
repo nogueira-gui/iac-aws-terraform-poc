@@ -151,22 +151,7 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration-post-exam" {
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on = [
-    aws_api_gateway_integration.lambda-gateway-integration-exam_id,
-    aws_api_gateway_integration.lambda-gateway-integration-exams,
-    aws_api_gateway_integration.lambda-gateway-integration-post-exam
-  ]
-
   rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = var.env
   description = "Deployment for ${var.env} at ${timestamp()}"
-}
-
-resource "aws_api_gateway_stage" "stage" {
-  stage_name    = var.env
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  deployment_id = aws_api_gateway_deployment.deployment.id
-
-  variables = {
-    "lambdaAlias" = "LIVE"
-  }
 }
