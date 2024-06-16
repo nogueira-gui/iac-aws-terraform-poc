@@ -36,3 +36,20 @@ def find_all():
                 'statusCode': 404,
                 'body': f'Erro ao buscar o arquivo no S3: {str(e)}'
             }
+
+
+def upload_json_file(s3_file_key:str, file_content:dict):
+    
+    s3_bucket = os.environ['BUCKET_NAME']
+    
+    s3 = boto3.client('s3')
+    
+    try:
+        response = s3.put_object(Bucket=s3_bucket, Key=s3_file_key, Body=json.dumps(file_content))
+        
+        return response
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': f'Erro ao salvar o arquivo no S3: {str(e)}'
+        }
