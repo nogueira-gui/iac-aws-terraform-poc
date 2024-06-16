@@ -172,8 +172,7 @@ resource "aws_api_gateway_integration" "lambda-gateway-integration-delete-exam" 
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = var.env
-  //set sp UTC time
-  description = "Deployment for ${var.env} at ${timestamp()-10800}"
+  description = "Deployment for the ${var.env} environment"
   triggers = {
     # NOTE: The configuration below will satisfy ordering considerations,
     #       but not pick up all future REST API changes. More advanced patterns
