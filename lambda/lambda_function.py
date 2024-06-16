@@ -12,10 +12,10 @@ def handler(event, context):
                 }
 
             body = json.loads(event['body'])
-            if 'id' not in body or 'content' not in body:
+            if 'file_name' not in body or 'content' not in body:
                 return {
                     'statusCode': 400,
-                    'body': json.dumps({'error': 'Missing id or content in request body'})
+                    'body': json.dumps({'error': 'Missing file_name or content in request body'})
                 }
 
             s3_file_key = body['file_name']
