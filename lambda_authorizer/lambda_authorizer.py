@@ -2,7 +2,7 @@ import json
 
 def handler(event, context):
     
-    if 'Token' not in event:
+    if 'authorizationToken' not in event:
         return {
             'statusCode': 401,
             'body': json.dumps({
@@ -11,7 +11,7 @@ def handler(event, context):
             })
         }
 
-    auth_token = event['Token']
+    auth_token = event['authorizationToken']
     if auth_token != 'Bearer my_secret_token':
         return generate_policy('user', 'Deny', event['methodArn'])
 
