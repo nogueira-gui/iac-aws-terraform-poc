@@ -201,7 +201,7 @@ resource "aws_api_gateway_deployment" "deployment" {
 }
 
 #Create IAM Role for Lambda Authorizer
-resource "aws_iam_role" "invocation_role" {
+resource "aws_iam_role" "role_lambda_authorizer" {
   name = "lambda-authorizer-role-${var.env}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -265,5 +265,5 @@ resource "aws_api_gateway_authorizer" "api_gateway_authorizer" {
   name                   = "lambda_authorizer_gateway_${var.env}"
   rest_api_id            = aws_api_gateway_rest_api.api.id
   authorizer_uri         = aws_lambda_function.lambda_authorizer.invoke_arn
-  authorizer_credentials = aws_iam_role.invocation_role.arn
+  authorizer_credentials = aws_iam_role.role_lambda_authorizer.arn
 }
