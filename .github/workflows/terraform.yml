@@ -47,6 +47,13 @@ jobs:
                   zip -r lambda.zip .
                   mv lambda.zip ../infra/envs/${{ inputs.environment }}/lambda.zip
                   cd ..
+                  
+            - name: zip lambda authorizer function
+              run: |
+                  cd lambda_authorizer
+                  zip -r lambda_authorizer.zip .
+                  mv lambda_authorizer.zip ../infra/envs/${{ inputs.environment }}/lambda_authorizer.zip
+                  cd ..
 
             - name: Read destroy configuration
               id: read-destroy-config
