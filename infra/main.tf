@@ -248,10 +248,12 @@ resource "aws_iam_policy" "policy_lambda_authorizer" {
       {
         Effect = "Allow",
         Action = [
-          "execute-api:Invoke"
+          "execute-api:Invoke",
+          "ssm:GetParameter"
         ],
         Resource = [
-          "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/*/*"
+          "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/*/*",
+          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.token_parameter_name}"        
         ]
       }
     ]
