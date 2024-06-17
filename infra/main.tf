@@ -200,16 +200,28 @@ resource "aws_api_gateway_deployment" "deployment" {
   }
 }
 
-
 #Create Lambda Authorizer
-resource "aws_api_gateway_authorizer" "lambda_authorizer" {
+resource "aws_lambda_function" "lambda_authorizer" {
+  function_name    = "lambda-authorizer-${var.env}"
+  handler          = "lambda_authorizer.handler"
+  runtime          = var.runtime
+  role             = aws_iam_role.role.arn
+  filename         = "${path.module}/envs/${var.env}/lambda_authorizer.zip"
+  source_code_hash = filebase64sha256("${path.module}/envs/${var.env}/lambda_authorizer.zip")
+  timeout          = var.timeout
+  memory_size      = var.memory_size
+}
+
+#Create API Gateway Method with Lambda Authorizer
+resource "aws_api_gateway_authorizer" "lambda_authorizer_gateway" {
   name                   = "lambda_authorizer"
   rest_api_id            = aws_api_gateway_rest_api.api.id
-  authorizer_uri         = aws_lambda_function.lambda-exam.invoke_arn
-  authorizer_credentials = aws_iam_role.role.arn
+  authorizer_uri         = aws_lambda_function.lambda_authorizer.invoke_arn
+  authorizer_credentials = aws_iam_role.role_authorizer.arn
   identity_source        = "method.request.header.Authorization"
   type                   = "REQUEST"
 }
+
 
 resource "aws_iam_role" "role_authorizer" {
   name = "lambda-authorizer-role-${var.env}"
@@ -248,29 +260,5 @@ resource "aws_lambda_permission" "apigw_lambda_authorizer" {
   principal     = "apigateway.amazonaws.com"
   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 
-  depends_on = [ aws_lambda_function.lambda_authorizer ]
+  depends_on = [ aws_lambda_function.lambda_authorizer_gateway ]
 }
-
-
-#Create Lambda Authorizer
-resource "aws_lambda_function" "lambda_authorizer" {
-  function_name    = "lambda-authorizer-${var.env}"
-  handler          = "lambda_authorizer.handler"
-  runtime          = var.runtime
-  role             = aws_iam_role.role.arn
-  filename         = "${path.module}/envs/${var.env}/lambda_authorizer.zip"
-  source_code_hash = filebase64sha256("${path.module}/envs/${var.env}/lambda_authorizer.zip")
-  timeout          = var.timeout
-  memory_size      = var.memory_size
-}
-
-#Create API Gateway Method with Lambda Authorizer
-resource "aws_api_gateway_authorizer" "lambda_authorizer" {
-  name                   = "lambda_authorizer"
-  rest_api_id            = aws_api_gateway_rest_api.api.id
-  authorizer_uri         = aws_lambda_function.lambda_authorizer.invoke_arn
-  authorizer_credentials = aws_iam_role.role_authorizer.arn
-  identity_source        = "method.request.header.Authorization"
-  type                   = "REQUEST"
-}
-
