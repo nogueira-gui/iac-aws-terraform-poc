@@ -2,6 +2,10 @@ variable "env" {
     description = "The environment"
 }
 
+variable "token_parameter_name" {
+  description = "value of the parameter name"
+}
+
 variable "bucket_name" {
     description = "The name of the S3 bucket to store Terraform state"
 } 

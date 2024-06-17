@@ -53,6 +53,13 @@ resource "aws_api_gateway_method" "delete_exam" {
   authorizer_id = aws_api_gateway_authorizer.api_gateway_authorizer.id
 }
 
+# PARAMETER STORE
+resource "aws_ssm_parameter" "my_secret_token" {
+  name  = var.token_parameter_name
+  type  = "String"
+  value = ""
+}
+
 #LAMBDA FUNCTION
 
 resource "aws_lambda_function" "lambda-exam" {
@@ -263,6 +270,13 @@ resource "aws_lambda_function" "lambda_authorizer" {
   source_code_hash = filebase64sha256("${path.module}/envs/${var.env}/lambda_authorizer.zip")
   timeout          = var.timeout
   memory_size      = var.memory_size
+
+  environment {
+    variables = {
+      TOKEN_PARAMETER_NAME = aws_ssm_parameter.my_secret_token.name
+    }
+  
+  }
 }
 
 #Create API Gateway Method with Lambda Authorizer
