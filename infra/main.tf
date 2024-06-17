@@ -268,6 +268,19 @@ resource "aws_api_gateway_authorizer" "api_gateway_authorizer" {
   authorizer_credentials = aws_iam_role.invocation_role.arn
 }
 
+data "aws_iam_policy_document" "invocation_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
 resource "aws_iam_role" "invocation_role" {
   name               = "api_gateway_auth_invocation"
   assume_role_policy = data.aws_iam_policy_document.invocation_assume_role.json
@@ -277,12 +290,12 @@ data "aws_iam_policy_document" "invocation_policy" {
   statement {
     effect    = "Allow"
     actions   = ["lambda:InvokeFunction"]
-    resources = [aws_lambda_function.authorizer.arn]
+    resources = [aws_lambda_function.lambda_authorizer.arn]
   }
 }
 
 resource "aws_iam_role_policy" "invocation_policy" {
-  name   = "default"
+  name   = "api_gateway_auth_invocation_policy"
   role   = aws_iam_role.invocation_role.id
   policy = data.aws_iam_policy_document.invocation_policy.json
 }
