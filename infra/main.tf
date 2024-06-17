@@ -58,6 +58,10 @@ resource "aws_ssm_parameter" "my_secret_token" {
   name  = var.token_parameter_name
   type  = "String"
   value = "changeit"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 #LAMBDA FUNCTION
