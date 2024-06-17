@@ -26,6 +26,7 @@ resource "aws_api_gateway_method" "get_exam" {
   resource_id   = aws_api_gateway_resource.exam_id.id
   http_method   = "GET"
   authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.api_gateway_authorizer.id
 }
 
 resource "aws_api_gateway_method" "get_exams" {
