@@ -5,8 +5,10 @@ def handler(event, context):
     if 'Token' not in event:
         return {
             'statusCode': 401,
-            'body': json.dumps({'error': 'Missing Authorization header'
-                                'event': event})
+            'body': json.dumps({
+                'error': 'Missing Authorization header',
+                'event': event
+            })
         }
 
     auth_token = event['Token']
