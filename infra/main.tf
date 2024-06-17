@@ -196,6 +196,7 @@ resource "aws_api_gateway_deployment" "deployment" {
       aws_api_gateway_integration.lambda-gateway-integration-exam_id.id,
       aws_api_gateway_method.delete_exam.id,
       aws_api_gateway_integration.lambda-gateway-integration-delete-exam.id,
+      aws_api_gateway_authorizer.api_gateway_authorizer.id
     ]))
   }
 
