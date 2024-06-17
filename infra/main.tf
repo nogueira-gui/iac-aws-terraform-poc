@@ -33,21 +33,24 @@ resource "aws_api_gateway_method" "get_exams" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.exams.id
   http_method   = "GET"
-  authorization = "NONE"
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.api_gateway_authorizer.id
 }
 
 resource "aws_api_gateway_method" "post_exam" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.exams.id
   http_method   = "POST"
-  authorization = "NONE"
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.api_gateway_authorizer.id
 }
 
 resource "aws_api_gateway_method" "delete_exam" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.exam_id.id
   http_method   = "DELETE"
-  authorization = "NONE"
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.api_gateway_authorizer.id
 }
 
 #LAMBDA FUNCTION
