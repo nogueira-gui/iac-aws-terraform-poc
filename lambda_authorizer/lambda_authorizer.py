@@ -3,9 +3,7 @@ import boto3
 import os
 
 def handler(event, context):
-    """
-    Lambda function to authorize API Gateway requests based on a token stored in AWS SSM Parameter Store.
-    """
+    
     try:
         secret_token = get_secret_token()
         auth_token = get_auth_token(event)
@@ -33,7 +31,14 @@ def get_auth_token(event):
     return event.get('authorizationToken')
 
 
-def generate_policy(principal_id, effect, resource):
+def generate_policy(principal_id, effect, method_arn):
+    # Extract the API Gateway ARN parts
+    arn_parts = method_arn.split(':')
+    api_gateway_arn_parts = arn_parts[5].split('/')
+    # EXAMPLE : arn:aws:execute-api:us-east-1:0000000000:zzzzzzzzzzz/ESTestInvoke-stage/GET/
+    # Construct the resource ARN to allow/deny all routes in the API Gateway
+    resource_arn = f'{arn_parts[0]}:{arn_parts[1]}:{arn_parts[2]}:{arn_parts[3]}:{arn_parts[4]}:{api_gateway_arn_parts[0]}/*'
+    
     return {
         'principalId': principal_id,
         'policyDocument': {
@@ -42,7 +47,7 @@ def generate_policy(principal_id, effect, resource):
                 {
                     'Action': 'execute-api:Invoke',
                     'Effect': effect,
-                    'Resource': resource
+                    'Resource': resource_arn
                 }
             ]
         }
