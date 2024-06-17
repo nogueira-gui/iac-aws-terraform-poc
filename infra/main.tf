@@ -58,7 +58,6 @@ resource "aws_ssm_parameter" "my_secret_token" {
   name  = var.token_parameter_name
   type  = "String"
   value = "changeit"
-  overwrite = true
 }
 
 #LAMBDA FUNCTION
