@@ -265,5 +265,24 @@ resource "aws_api_gateway_authorizer" "api_gateway_authorizer" {
   name                   = "lambda_authorizer_gateway_${var.env}"
   rest_api_id            = aws_api_gateway_rest_api.api.id
   authorizer_uri         = aws_lambda_function.lambda_authorizer.invoke_arn
-  authorizer_credentials = aws_iam_role.role_lambda_authorizer.arn
+  authorizer_credentials = aws_iam_role.invocation_role.arn
+}
+
+resource "aws_iam_role" "invocation_role" {
+  name               = "api_gateway_auth_invocation"
+  assume_role_policy = data.aws_iam_policy_document.invocation_assume_role.json
+}
+
+data "aws_iam_policy_document" "invocation_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:InvokeFunction"]
+    resources = [aws_lambda_function.authorizer.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "invocation_policy" {
+  name   = "default"
+  role   = aws_iam_role.invocation_role.id
+  policy = data.aws_iam_policy_document.invocation_policy.json
 }
