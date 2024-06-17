@@ -2,10 +2,11 @@ import json
 import boto3
 import os
 
-ssm = boto3.client('ssm')
-parameter_name = os.environ['TOKEN_PARAMETER_NAME']
 
 def handler(event, context):
+    
+    parameter_name = os.environ['TOKEN_PARAMETER_NAME']
+    ssm = boto3.client('ssm')
     token_response = ssm.get_parameter(
         Name=parameter_name,
         WithDecryption=True
