@@ -2,13 +2,13 @@ import json
 
 def handler(event, context):
     
-    if 'Authorization' not in event:
+    if 'Token' not in event:
         return {
             'statusCode': 401,
             'body': json.dumps({'error': 'Missing Authorization header'})
         }
 
-    auth_token = event['Authorization']
+    auth_token = event['Token']
     if auth_token != 'Bearer my_secret_token':
         return generate_policy('user', 'Deny', event['methodArn'])
 
