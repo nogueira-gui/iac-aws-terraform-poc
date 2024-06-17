@@ -57,7 +57,6 @@ resource "aws_api_gateway_method" "delete_exam" {
 resource "aws_ssm_parameter" "my_secret_token" {
   name  = var.token_parameter_name
   type  = "String"
-  value = "changeit"
 }
 
 #LAMBDA FUNCTION
