@@ -35,6 +35,8 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 POLICY
 }
 
+# QUando acessar a pagia sem o index.html, redirecionar para o browser que contem o index.html
+# http://bucket-exam-frontend-dev.s3-website-us-east-1.amazonaws.com/  --> http://bucket-exam-frontend-dev.s3-website-us-east-1.amazonaws.com/browser/index.html
 # S3 Bucket Website Configuration
 resource "aws_s3_bucket_website_configuration" "bucket_website" {
   bucket = aws_s3_bucket.bucket_frontend.bucket
@@ -47,6 +49,61 @@ resource "aws_s3_bucket_website_configuration" "bucket_website" {
     key = "error.html"
   }
 
+}
+
+# CloudFront Distribution
+resource "aws_cloudfront_distribution" "cdn" {
+  origin {
+    domain_name = "${aws_s3_bucket.bucket.bucket}.s3.amazonaws.com"
+    origin_id   = "S3-${aws_s3_bucket.bucket.bucket}"
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    }
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  comment             = "CloudFront distribution for ${var.bucket_name}"
+  default_root_object = "index.html"
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+  }
+
+  price_class = "PriceClass_100"
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+
+  depends_on = [aws_s3_bucket.bucket, aws_cloudfront_origin_access_identity.origin_access_identity]
+}
+
+# CloudFront Origin Access Identity
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "OAI for ${aws_s3_bucket.bucket.bucket}"
 }
 
 #API GATEWAY
