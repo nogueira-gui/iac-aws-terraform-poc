@@ -1,6 +1,7 @@
 env = "dev"
 # S3 Bucket Variables
 bucket_name = "bucket-exam-files-dev"
+bucket_frontend_name = "bucket-exam-frontend-dev"
 
 token_parameter_name = "/exam/dev/token"
 

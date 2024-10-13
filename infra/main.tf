@@ -3,9 +3,13 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
 }
 
+resource "aws_s3_bucket_frontend" "bucket_frontend" {
+  bucket = var.bucket_frontend_name
+}
+
 # S3 Bucket Policy
 resource "aws_s3_bucket_public_access_block" "public_access_block" {
-  bucket = aws_s3_bucket.bucket.bucket
+  bucket = aws_s3_bucket.bucket_frontend.bucket
 
   block_public_acls       = false
   block_public_policy     = false
@@ -15,10 +19,10 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
 
 # S3 Bucket Website Configuration
 resource "aws_s3_bucket_website_configuration" "bucket_website" {
-  bucket = aws_s3_bucket.bucket.bucket
+  bucket = aws_s3_bucket.bucket_frontend.bucket
 
   index_document {
-    suffix = "index.html"
+    suffix = "/browse/index.html"
   }
 
   error_document {
