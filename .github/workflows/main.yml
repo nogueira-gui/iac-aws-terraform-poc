@@ -17,4 +17,5 @@ jobs:
             aws-assume-role-arn: 'arn:aws:iam::698974420629:role/github-actions-pipeline'
             aws-region: 'us-east-1'
             aws-statefile-s3-bucket: 'nogueira-gui-terraform-state-bucket'
+            aws-frontends3-bucket: 'bucket-exam-files-prod'
             aws-lock-dynamodb-table: 'pipeline-nogueira-gui-terraform-lock'

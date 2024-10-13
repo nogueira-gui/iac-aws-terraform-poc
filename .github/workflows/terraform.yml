@@ -15,6 +15,9 @@ on:
             aws-statefile-s3-bucket:
                 required: true
                 type: string
+            aws-frontends3-bucket:
+                required: true
+                type: string
             aws-lock-dynamodb-table:
                 required: true
                 type: string
@@ -33,6 +36,20 @@ jobs:
               uses: hashicorp/setup-terraform@v3
               with:
                   terraform_version: 1.0.3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18.x'
+
+            - name: Install Angular CLI
+              run: npm install -g @angular/cli
+
+            - name: Install dependencies and build Angular app
+              run: |
+                cd frontend/simulados-web-app
+                npm install
+                npm run build
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
@@ -92,4 +109,8 @@ jobs:
               run: cd infra &&
                   terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
                   terraform apply "${{ inputs.environment }}.plan"
+
+            - name: Upload Angular build to S3
+              run: |
+                aws s3 sync frontend/simulados-web-app/dist/simulados-web-app s3://${{ inputs.aws-frontends3-bucket }}/
                   
