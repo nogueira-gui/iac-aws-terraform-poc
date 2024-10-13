@@ -22,7 +22,7 @@ resource "aws_s3_bucket_website_configuration" "bucket_website" {
   bucket = aws_s3_bucket.bucket_frontend.bucket
 
   index_document {
-    suffix = "/index.html"
+    suffix = "index.html"
   }
 
   error_document {
