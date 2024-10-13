@@ -10,6 +10,10 @@ variable "bucket_name" {
     description = "The name of the S3 bucket to store Terraform state"
 } 
 
+variable "bucket_frontend_name" {
+  description = "The name of the S3 bucket to store the frontend"
+}
+
 variable "api_gateway_name" {
     description = "The name of the API Gateway"
 }

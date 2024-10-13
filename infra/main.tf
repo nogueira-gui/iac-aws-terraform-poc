@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
 }
 
-resource "aws_s3_bucket_frontend" "bucket_frontend" {
+resource "aws_s3_bucket" "bucket_frontend" {
   bucket = var.bucket_frontend_name
 }
 
