@@ -17,7 +17,24 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   restrict_public_buckets = false
 }
 
-# my index.html in this s3 path s3://bucket-exam-frontend-dev/browser/index.html
+# S3 Bucket Policy	
+resource "aws_s3_bucket_policy" "bucket_policy" {
+  bucket = aws_s3_bucket.bucket_frontend.bucket
+  policy = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.bucket_frontend.bucket}/*"
+        }
+    ]
+}
+POLICY
+}
+
 # S3 Bucket Website Configuration
 resource "aws_s3_bucket_website_configuration" "bucket_website" {
   bucket = aws_s3_bucket.bucket_frontend.bucket
@@ -30,20 +47,6 @@ resource "aws_s3_bucket_website_configuration" "bucket_website" {
     key = "error.html"
   }
 
-  routing_rules = <<EOF
-  [
-    {
-      "Condition": {
-        "HttpErrorCodeReturnedEquals": "404",
-        "KeyPrefixEquals": "error.html"
-      },
-      "Redirect": {
-        "HostName": "http://${var.bucket_frontend_name}.s3-website-${data.aws_region.current.name}.amazonaws.com",
-        "ReplaceKeyPrefixWith": "browser/"
-      }
-    }
-  ]
-  EOF
 }
 
 #API GATEWAY
