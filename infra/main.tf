@@ -17,6 +17,7 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   restrict_public_buckets = false
 }
 
+# my index.html in this s3 path s3://bucket-exam-frontend-dev/browser/index.html
 # S3 Bucket Website Configuration
 resource "aws_s3_bucket_website_configuration" "bucket_website" {
   bucket = aws_s3_bucket.bucket_frontend.bucket
@@ -29,14 +30,20 @@ resource "aws_s3_bucket_website_configuration" "bucket_website" {
     key = "error.html"
   }
 
-  # routing_rule {
-  #   condition {
-  #     key_prefix_equals = "docs/"
-  #   }
-  #   redirect {
-  #     replace_key_prefix_with = "documents/"
-  #   }
-  # }
+  routing_rules = <<EOF
+  [
+    {
+      "Condition": {
+        "HttpErrorCodeReturnedEquals": "404",
+        "KeyPrefixEquals": "error.html"
+      },
+      "Redirect": {
+        "HostName": "s3-website-${data.aws_region.current.name}.amazonaws.com",
+        "ReplaceKeyPrefixWith": "browser/"
+      }
+    }
+  ]
+  EOF
 }
 
 #API GATEWAY
