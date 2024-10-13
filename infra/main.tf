@@ -38,7 +38,7 @@ resource "aws_s3_bucket_website_configuration" "bucket_website" {
         "KeyPrefixEquals": "error.html"
       },
       "Redirect": {
-        "HostName": "s3-website-${data.aws_region.current.name}.amazonaws.com",
+        "HostName": "http://${var.bucket_frontend_name}.s3-website-${data.aws_region.current.name}.amazonaws.com",
         "ReplaceKeyPrefixWith": "browser/"
       }
     }
